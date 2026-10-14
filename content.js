@@ -17,6 +17,10 @@
     cfg: null,
     siteKey: '',
   };
+  // 翻译任务代号：每次开始翻译递增；点击「原文」时递增以取消进行中的翻译
+  let runId = 0;
+  // 用户是否手动点了「原文」（点了之后不再自动翻译，除非再点「中文」）
+  let userRestored = false;
 
   const CJK_RE = /[\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af]/g;
   const HAS_LETTER_RE = /[A-Za-z\u00c0-\u024f\u0400-\u04ff\u0600-\u06ff\u0900-\u097f\u3040-\u30ff\uac00-\ud7af]/;
@@ -158,9 +162,10 @@
     }
   }
 
-  async function processBatch(batch) {
+  async function processBatch(batch, id) {
     const CHUNK = 40;
     for (let i = 0; i < batch.nodes.length; i += CHUNK) {
+      if (id !== undefined && id !== runId) return; // 任务已被取消（用户点了原文）
       const cn = batch.nodes.slice(i, i + CHUNK);
       const ct = batch.texts.slice(i, i + CHUNK);
       try {
@@ -169,10 +174,11 @@
           texts: ct,
           targetLang: state.cfg.targetLang,
         });
-        if (resp && resp.ok) applyNodes(cn, ct, resp.translations);
+        if (resp && resp.ok && (id === undefined || id === runId)) applyNodes(cn, ct, resp.translations);
       } catch (e) { /* 超时等错误：保留原文 */ }
     }
     for (let i = 0; i < batch.attrs.length; i += CHUNK) {
+      if (id !== undefined && id !== runId) return; // 任务已被取消（用户点了原文）
       const ca = batch.attrs.slice(i, i + CHUNK);
       try {
         const resp = await sendMessage({
@@ -180,13 +186,16 @@
           texts: ca.map((a) => a.text),
           targetLang: state.cfg.targetLang,
         });
-        if (resp && resp.ok) applyAttrs(ca, resp.translations);
+        if (resp && resp.ok && (id === undefined || id === runId)) applyAttrs(ca, resp.translations);
       } catch (e) { break; }
     }
     updatePill();
   }
 
   function restore() {
+    // 取消进行中的翻译任务，防止恢复原文后被后续翻译再次覆盖
+    runId++;
+    userRestored = true;
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     let cur, n = 0;
     while ((cur = walker.nextNode())) {
@@ -268,9 +277,11 @@
         if (state.status !== 'translated') return;
         const batch = collect(document.body, 200);
         if (batch.nodes.length || batch.attrs.length) {
+          const id = runId;
           state.status = 'translating';
           updatePill();
-          await processBatch(batch);
+          await processBatch(batch, id);
+          if (id !== runId) return; // 已被取消
           state.status = 'translated';
           updatePill();
         }
@@ -283,22 +294,25 @@
   async function translatePage() {
     if (state.status === 'translating' || state.status === 'off' ||
         state.status === 'off-site' || state.status === 'already-cjk') return;
+    const id = ++runId;
+    userRestored = false; // 用户手动点击了「中文」，恢复自动翻译
     state.status = 'translating';
     updatePill();
     ensurePill();
     let ok = false;
     try {
       const first = collect(document.body, 400);
-      await processBatch(first);
+      await processBatch(first, id);
       ok = true;
       // 二次扫描，捕获延迟加载的内容
       setTimeout(async () => {
-        if (state.status !== 'translated') return;
+        if (id !== runId || state.status !== 'translated') return;
         const more = collect(document.body, 300);
         if (more.nodes.length || more.attrs.length) {
           state.status = 'translating';
           updatePill();
-          await processBatch(more);
+          await processBatch(more, id);
+          if (id !== runId) return; // 已被取消
           state.status = 'translated';
           updatePill();
         }
@@ -306,6 +320,7 @@
     } catch (e) {
       ok = false;
     }
+    if (id !== runId) return; // 任务已被取消（用户在翻译过程中点了原文）
     state.status = ok ? 'translated' : 'error';
     updatePill();
   }
@@ -317,6 +332,8 @@
     if (!state.cfg.autoEnabled) { state.status = 'off'; updatePill(); return; }
     if (siteDisabled) { state.status = 'off-site'; updatePill(); return; }
     if (!document.body) { state.status = 'idle'; updatePill(); return; }
+    // 用户手动点过「原文」后，不再自动翻译，除非再点「中文」
+    if (userRestored) { state.status = 'restored'; updatePill(); return; }
     const sample = (document.body.innerText || '').slice(0, 4000);
     if (cjkRatio(sample) > 0.5) { state.status = 'already-cjk'; updatePill(); return; }
     ensurePill();

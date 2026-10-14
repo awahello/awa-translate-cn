@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Awa自动翻译中文",
   "short_name": "Awa翻译",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "全自动将任意网页文字翻译成中文（简体），打开网页即自动翻译，无需任何点击。",
   "author": { "name": "Awa" },
   "homepage_url": "https://www.akkdiy.cn",

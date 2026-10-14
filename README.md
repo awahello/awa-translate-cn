@@ -4,7 +4,7 @@
 
 **全自动网页翻译 Chrome 扩展 —— 打开网页即自动翻译成中文（简体）**
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 
 ![Manifest](https://img.shields.io/badge/Manifest-V3-orange.svg)
 
@@ -114,6 +114,11 @@ A：当前版本固定翻译为简体中文（`zh-CN`），与扩展名称对应
 A：首次翻译取决于网络；相同内容有本地缓存，重复访问同一站点几乎瞬间完成。
 
 ## 更新日志
+
+### v1.0.1（2026-10-14）
+
+- 修复：翻译过程中点击「原文」后，又被后续翻译自动覆盖的问题
+- 调整：点击「原文」后保持原文状态，需手动点击「中文」才会恢复翻译
 
 ### v1.0.0（2026-10-14）
 
