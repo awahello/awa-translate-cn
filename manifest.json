@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Awa自动翻译中文",
+  "short_name": "Awa翻译",
+  "version": "1.0.0",
+  "description": "全自动将任意网页文字翻译成中文（简体），打开网页即自动翻译，无需任何点击。",
+  "author": { "name": "Awa" },
+  "homepage_url": "https://www.akkdiy.cn",
+  "icons": {
+    "16": "icons/16.png",
+    "19": "icons/19.png",
+    "32": "icons/32.png",
+    "38": "icons/38.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_title": "Awa自动翻译中文",
+    "default_popup": "popup.html",
+    "default_icon": { "19": "icons/19.png", "38": "icons/38.png" }
+  },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
+}

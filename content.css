@@ -1,0 +1,61 @@
+/* Awa自动翻译中文 - 悬浮控制条样式（Copyright © Awa · www.akkdiy.cn） */
+#awa-pill {
+  all: initial;
+  position: fixed !important;
+  right: 14px !important;
+  bottom: 14px !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 7px 10px 7px 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #dadce0 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 16px rgba(60, 64, 67, 0.28) !important;
+  font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  color: #202124 !important;
+  user-select: none !important;
+}
+#awa-pill .awa-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #1a73e8 !important;
+  flex: none !important;
+}
+#awa-pill .awa-text {
+  white-space: nowrap !important;
+  font-weight: 500 !important;
+}
+#awa-pill .awa-btn {
+  all: unset;
+  cursor: pointer !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-family: inherit !important;
+  color: #1a73e8 !important;
+  border: 1px solid #dadce0 !important;
+  background: #ffffff !important;
+  white-space: nowrap !important;
+}
+#awa-pill .awa-btn:hover {
+  background: #f1f3f4 !important;
+}
+#awa-pill .awa-btn.awa-on {
+  background: #1a73e8 !important;
+  border-color: #1a73e8 !important;
+  color: #ffffff !important;
+}
+#awa-pill .awa-close {
+  cursor: pointer !important;
+  color: #80868b !important;
+  font-size: 14px !important;
+  padding: 0 2px !important;
+}
+#awa-pill .awa-close:hover {
+  color: #202124 !important;
+}

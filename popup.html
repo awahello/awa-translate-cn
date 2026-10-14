@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Awa自动翻译中文</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="brand">
+    <img class="logo" src="icons/48.png" alt="Awa">
+    <div class="brand-text">
+      <h1>Awa自动翻译中文</h1>
+      <p>全自动网页翻译 · Google 翻译引擎</p>
+    </div>
+    <span id="statusDot" class="dot dot-idle" title="状态"></span>
+  </header>
+
+  <section class="info">
+    <div class="row">
+      <span class="label">当前站点</span>
+      <span id="siteHost" class="value">—</span>
+    </div>
+    <div class="row">
+      <span class="label">翻译状态</span>
+      <span id="stateText" class="value">检测中…</span>
+    </div>
+    <div class="row">
+      <span class="label">已翻译</span>
+      <span id="countText" class="value">0 处</span>
+    </div>
+  </section>
+
+  <section class="actions">
+    <button id="btnTranslate" class="btn btn-primary" type="button">立即翻译此页</button>
+    <button id="btnRestore" class="btn" type="button">恢复原文</button>
+  </section>
+
+  <section class="switches">
+    <label class="switch" for="chkAuto">
+      <input type="checkbox" id="chkAuto">
+      <span class="track"><span class="knob"></span></span>
+      <span class="switch-label">全局自动翻译（打开网页即翻译）</span>
+    </label>
+    <label class="switch" for="chkSite">
+      <input type="checkbox" id="chkSite">
+      <span class="track"><span class="knob"></span></span>
+      <span class="switch-label">翻译当前网站（取消勾选本网站不再自动翻译）</span>
+    </label>
+  </section>
+
+  <footer>
+    <span>© Awa · <a href="https://www.akkdiy.cn" target="_blank" rel="noopener">www.akkdiy.cn</a></span>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
